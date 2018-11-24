@@ -27,4 +27,13 @@ urlpatterns = [
     url(r'^logout_user/$', views.logout_user, name='logout_user'),
     url(r'^trans/$', views.transaction, name='trans'),
     url(r'^main/$', views.maintenance, name='main'),
-    url(r'^repo/$', views.report, name='repo'),]
+    url(r'^repo/$', views.report, name='repo'),
+    url(r'^mlmovies/$', views.mlmovies, name='mlmovies'),
+    url(r'^mlbooks/$', views.mlbooks, name='mlbooks'),
+    url(r'^mlmember/$', views.mlmember, name='mlmember'),
+    url(r'^actissues/$', views.actissues, name='actissues'),
+    url(r'^overdueslist/$', views.overdueslist, name='overdueslist'),
+
+
+
+]

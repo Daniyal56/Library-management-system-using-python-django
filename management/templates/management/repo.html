@@ -5,13 +5,178 @@
 		<div class="innertube">
 			<ul>
 			
-				<li><a href=#>Master List of Movies<a></li>
-				<li><a href=#>Master List of Movies<a></li>
-				<li><a href=#>Active Issues<a></li>
-				<li><a href=#>Overdue returns<a></li>
+				<li><a href="/management/mlbooks/">Master List of Books<a></li>
+				<li><a href="/management/mlmovies/">Master List of Movies<a></li>
+				<li><a href="/management/mlmember/">Master List of Memberships<a></li>
+				<li><a href="/management/actissues/">Active Issues<a></li>
+				<li><a href="/management/overdueslist/">Overdue returns<a></li>
 				<li><a href=#>Issue Requests<a></li>
 			</ul>
 			</div>
-		</nav>			
+		</nav>
 
 {% endblock %}
+
+{% block rightbody %}
+
+	{% if mlbooks %}
+		<center>
+			<table cellpadding="50", border="1", align="center" >
+                   <caption><h3>Master List of Books</h3></caption>
+				   <tr>
+				   <th>Serial No.</th><th>Name of Book</th><th>Author Name</th><th>Category</th><th>Status</th><th>Cost</th><th>Procurement Date</th>
+				   </tr>
+				   {% for book_object in mlbooks %}
+						<tr>
+						<td>{{book_object.serial}}</td><td>{{book_object.name}}</td><td>{{book_object.author}}</td><td>{{book_object.category}}</td><td>{{book_object.status}}</td><td>₹ {{book_object.cost}}/-</td><td>{{book_object.procurement}}</td>
+						</tr>
+				   {% endfor %}
+			</table>
+		</center>
+		
+	{% endif %}
+	
+	
+	{% if mlmovies %}
+		<center>
+			<table cellspacing="50", border="1", align="center" >
+                   <caption><h3>Master List of Movies</h3></caption>
+				   <tr>
+				   <th>Serial No.</th><th>Name of Movie</th><th>Author Name</th><th>Category</th><th>Status</th><th>Cost</th><th>Procurement Date</th>
+				   </tr>
+				   {% for movie_object in mlmovies %}
+						<tr>
+						<td>{{movie_object.serial}}</td><td>{{movie_object.name}}</td><td>{{movie_object.author}}</td><td>{{movie_object.category}}</td><td>{{movie_object.status}}</td><td>₹ {{movie_object.cost}}/-</td><td>{{movie_object.procurement}}</td>
+						</tr>
+				   {% endfor %}
+			</table>
+		</center>
+
+
+
+	{% endif %}
+	
+	
+	
+	{% if mlmember %}
+		<center>
+			<table cellspacing="50", border="1", align="center" >
+                   <caption><h3>Master List of Memberships</h3></caption>
+				    <tr>  
+					  <th>Membership Id</th><th>Name of Member</th><th>Contact Number</th><th>Contact Address</th><th>Aadhar Card No.</th><th>Start Date of Membership</th><th>End Date of Membership</th><th>Status (Active/Inactive)</th><th>Amount Pending(Fine)</th>
+					</tr>
+				   {% for member_object in mlmember %}
+						<tr>
+						<td>{{member_object.id}}</td><td>{{member_object.name}}</td><td>{{member_object.contact}}</td><td>{{member_object.address}}</td><td>{{member_object.aadhar}}</td><td>{{member_object.start_date}}</td><td>{{member_object.end_date}}</td><td>{{member_object.status}}</td><td>₹ {{member_object.fine}}/-</td>
+						</tr>
+				   {% endfor %}
+			</table>
+		</center>
+
+
+
+	{% endif %}
+		
+		
+	{% if actissues %}
+		<center>
+			<table cellspacing="50", border="1", align="center" >
+                   <caption><h3>Active Issues</h3></caption>
+				    <tr>  
+					  <th>Serial No.: Book/ Movie</th><th>Name of Book/ Movie</th><th>Membership Id.</th><th>Date of Issue</th><th>Date of Return</th>
+					</tr>
+					
+									<tr>
+							{% for i in actissues_data %}
+								
+									
+										<td>{{ i }}</td>
+									
+									{% if forloop.counter|divisibleby:actissues %}
+									
+									</tr>
+									<tr>
+									{% endif %}
+									
+								
+						    {% endfor %}
+									</tr>
+						
+			</table>
+		</center>
+	{% endif %}		
+	
+	
+	
+	
+		
+	{% if overdueslist %}
+		<center>
+			<table cellspacing="50", border="1", align="center" >
+                   <caption><h3>Overdue Returns</h3></caption>
+				    <tr>  
+					  <th>Serial No.: Book/ Movie</th><th>Name of Book/ Movie</th><th>Membership Id.</th><th>Date of Issue</th><th>Date of Return</th><th>Fine Calculations</th>
+					  
+					</tr>
+					
+									<tr>
+							{% for i in overdueslist_data %}
+								
+									
+										<td>{{ i }}</td>
+									
+									{% if forloop.counter|divisibleby:overdueslist %}
+									
+									</tr>
+									<tr>
+									{% endif %}
+									
+								
+						    {% endfor %}
+									</tr>
+						
+			</table>
+		</center>
+	{% endif %}		
+		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		
+		
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

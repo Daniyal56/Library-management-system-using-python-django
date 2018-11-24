@@ -33,6 +33,7 @@ class Movies(models.Model):
         return ('Movie: ' + self.name+ '('+self.author +')')
 
 
+
 class Memberships(models.Model):
     """
     Membershipsclass - to describe Memberships in the ERP.
@@ -46,39 +47,12 @@ class Memberships(models.Model):
     end_date = models.DateField(null=True, blank=True)
     status = models.CharField(max_length=200)
     fine = models.IntegerField()
+    if_having_book = models.CharField(max_length=200)
+    if_having_movie = models.CharField(max_length=200)
+    if_issue_date = models.DateField(null=True, blank=True)
+    if_return_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return ('Member Name: ' + self.name )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

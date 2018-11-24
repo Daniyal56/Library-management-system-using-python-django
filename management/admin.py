@@ -5,5 +5,3 @@ from .models import Book, Movies, Memberships
 admin.site.register(Book)
 admin.site.register(Movies)
 admin.site.register(Memberships)
-
-
