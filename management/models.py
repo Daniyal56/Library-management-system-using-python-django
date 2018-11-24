@@ -13,6 +13,7 @@ class Book(models.Model):
     status = models.CharField(max_length=200)
     cost = models.IntegerField()
     procurement = models.DateField(null=True, blank=True)
+    quantity = models.IntegerField(default=1)
 
     def __str__(self):
         return ('Book: ' + self.name)  #object description in string
@@ -28,10 +29,10 @@ class Movies(models.Model):
     status = models.CharField(max_length=200)
     cost = models.IntegerField()
     procurement = models.DateField(null=True, blank=True)
+    quantity = models.IntegerField(default=1)
 
     def __str__(self):
         return ('Movie: ' + self.name+ '('+self.author +')')
-
 
 
 class Memberships(models.Model):

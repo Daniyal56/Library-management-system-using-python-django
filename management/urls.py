@@ -33,6 +33,9 @@ urlpatterns = [
     url(r'^mlmember/$', views.mlmember, name='mlmember'),
     url(r'^actissues/$', views.actissues, name='actissues'),
     url(r'^overdueslist/$', views.overdueslist, name='overdueslist'),
+    url(r'^addmember/$', views.addmember, name='addmember'),
+    url(r'^addbook/$', views.addbook, name='addbook'),
+    url(r'^addsuperuser/$', views.addsuperuser, name='addsuperuser'),
 
 
 
