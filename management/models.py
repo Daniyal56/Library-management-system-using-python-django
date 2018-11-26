@@ -34,7 +34,6 @@ class Movies(models.Model):
     def __str__(self):
         return ('Movie: ' + self.name+ '('+self.author +')')
 
-
 class Memberships(models.Model):
     """
     Membershipsclass - to describe Memberships in the ERP.

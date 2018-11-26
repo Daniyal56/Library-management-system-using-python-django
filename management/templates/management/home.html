@@ -13,6 +13,56 @@
     <script src="{% static 'management/js/main.js' %}"></script>
     <style>
 
+			.reveal-if-active {
+			  opacity: 0;
+			  max-height: 0;
+			  overflow: hidden;
+			  font-size: 16px;
+			  transform: scale(0.8);
+			  transition: 0.5s;
+			  
+			  label {
+				display: block;
+				margin: 0 0 3px 0;
+			  }
+			  input[type=text] {
+				width: 100%;
+			  }
+			  
+			  input[type="radio"]:checked ~ &,
+			  input[type="checkbox"]:checked ~ & {
+				opacity: 1;
+				max-height: 100px;
+				padding: 10px 20px;
+				transform: scale(1);
+				overflow: visible;
+			  }
+			  
+			}
+
+			form {
+			  max-width: 500px;
+			  margin: 20px auto;
+			  > div {
+				margin: 0 0 20px 0;
+				label {
+				  font-weight: bold;
+				}
+				> div {
+				  padding: 5px;
+				}
+			  }
+			  > h4 {
+				color: green;
+				font-size: 24px;
+				margin: 0 0 10px 0;
+				border-bottom: 2px solid green;
+			  }
+			}
+
+	
+	
+	
 
 		#header {
 			position: absolute;
@@ -148,23 +198,23 @@
 			<div class="innertube">
 
                 {% if product_details %}
-                <center><table cellspacing="20", border="1", align="center" >
-                    <caption><h3>Product Details</h3> </caption>
-                    <tr><th>Serial No. From</th><th>Serial No. to</th><th>Genere</th></tr>
-                    {% for k,v in product_details.items %}
+							<center><table cellspacing="20", border="1", align="center" >
+								<caption><h3>Product Details</h3> </caption>
+								<tr><th>Serial No. From</th><th>Serial No. to</th><th>Genere</th></tr>
+								{% for k,v in product_details.items %}
 
-                        <tr>
-                            <td>{{ v.0 }}</td>
-                            <td>{{ v.1 }}</td>
-                            <th>{{ k }}</th>
+									<tr>
+										<td>{{ v.0 }}</td>
+										<td>{{ v.1 }}</td>
+										<th>{{ k }}</th>
 
-                        </tr>
-                    {% endfor %}
-                </table></center><br><br>
-                <p>*NaN : Books for this category not currently available in <i><u><b>eleven's library</b></u></i></p>
-                {% else %}
-                    {% block rightbody %}
-                    {% endblock %}
+									</tr>
+								{% endfor %}
+							</table></center><br><br>
+							<p>*NaN : Books for this category not currently available in <i><u><b>eleven's library</b></u></i></p>
+					{% else %}
+					{% block rightbody %}
+					{% endblock %}
 
                 {% endif %}
 

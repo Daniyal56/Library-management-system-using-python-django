@@ -8,7 +8,7 @@ from .forms import UserForm
 from .models import Book, Movies, Memberships
 from django.db.models import Q
 from django.http import HttpResponse
-from datetime import date
+import datetime
 from django.contrib.auth import get_user_model
 
 # Create your views here.
@@ -50,6 +50,9 @@ def maintenance(request):
     if not request.user.is_authenticated():
         return render(request, 'management/login.html')
     else:
+        if not request.user.is_superuser:
+            return HttpResponse('Woah! only superusers Allowed!!!')
+
         return render(request, 'management/main.html', context={'user': request.user, "product_details": get_range()})
 
 def report(request):
@@ -232,7 +235,7 @@ def addmember(request):
     if not request.user.is_authenticated():
         return render(request, 'management/login.html')
     elif not request.user.is_superuser:
-        return HttpResponse('The user is not superuser')
+        return HttpResponse('Woah! only superusers Allowed!!!')
     elif request.method == 'POST':
         fname = request.POST['fname']
         lname = request.POST['lname']
@@ -259,7 +262,7 @@ def addbook(request):
     if not request.user.is_authenticated():
         return render(request, 'management/login.html')
     elif not request.user.is_superuser:
-        return HttpResponse('The user is not superuser')
+        return HttpResponse('Woah! only superusers Allowed!!!')
     elif request.method == 'POST':
 
         choice = request.POST['choice']
@@ -311,3 +314,215 @@ def addsuperuser(request):
     else:
         return render(request, 'management/main.html',context={'add_superuser':'add_superuser'})
 
+
+
+
+
+
+
+
+
+
+
+
+
+def payfine(request):
+
+    if not request.user.is_authenticated():
+        return render(request, 'management/login.html')
+
+    elif request.method == 'POST':
+
+
+
+            radio = request.POST['radio']
+            member = request.POST['member']
+            serial = request.POST['serial'].upper()
+            radio2 = request.POST['radio2']
+            rdate = request.POST['date']
+            try:
+
+                if radio =="0":
+                    o=Memberships.objects.get(id=member)
+                    keep_id=member
+                    if radio2 == "3":
+                        #current date
+                        days_diff=abs((datetime.date.today() - (o.if_issue_date+datetime.timedelta(days=15))).days)
+
+
+                    else:
+                        #date
+                        ry, rm, rd = rdate.split("-")
+                        days_diff=abs((datetime.date(ry, rm, rd)- (o.if_issue_date+datetime.timedelta(days=15))).days)
+
+
+
+
+
+
+                elif radio == '1':
+                    #serial
+                    for i in Memberships.objects.filter(Q(if_having_book='') ^ Q(if_having_movie='')):
+                        if i.if_having_book == serial:
+                            if radio2 == "3":
+                                keep_id=i.id
+                                days_diff = abs((datetime.date.today() - (i.if_issue_date+datetime.timedelta(days=15))).days)
+                            else:
+                                keep_id = i.id
+                                ry, rm, rd = rdate.split("-")
+                                days_diff = abs((datetime.date(ry, rm, rd) - (i.if_issue_date+datetime.timedelta(days=15))).days)
+                        elif i.if_having_movie == serial:
+                            if radio2 == "3":
+                                keep_id = i.id
+                                days_diff = abs((datetime.date.today() - (i.if_issue_date+datetime.timedelta(days=15))).days)
+                            else:
+                                keep_id = i.id
+                                ry, rm, rd = rdate.split("-")
+                                days_diff = abs((datetime.date(ry, rm, rd) - (i.if_issue_date+datetime.timedelta(days=15))).days)
+                        else:
+                            pass
+                else:
+                    pass
+
+                o = Memberships.objects.get(id=keep_id)
+                o.status = 'inactive'
+                o.fine = '0'
+                o.if_having_book = ''
+                o.if_having_movie = ''
+                o.if_issue_date = '1990-01-01'
+                o.if_return_date = '1990-01-01'
+                o.save()
+
+                return render(request, 'management/trans.html',context={'payfine':[o.name, days_diff*10,days_diff]})
+            except Exception as error_message:
+                return render(request, 'management/trans.html', context={'error_message': error_message})
+    else:
+
+        #get method
+        return render(request, 'management/trans.html',context={'pay_fine':'pay_fine'})
+
+
+def retbook(request):
+    if not request.user.is_authenticated():
+        return render(request, 'management/login.html')
+    else:
+        return render(request, 'management/trans.html', context={'retbook': 'retbook'} )
+
+
+def letsretbook(request):
+    if not request.user.is_authenticated():
+        return render(request, 'management/login.html')
+    elif request.method == 'POST':
+        try:
+
+            serial = request.POST['serial'].upper()
+            remarks = request.POST['remarks']
+
+            for i in Memberships.objects.filter(Q(if_having_book='') ^ Q(if_having_movie='')):
+                if i.if_having_book == serial:
+                    keep_id = i.id
+
+                elif i.if_having_movie == serial:
+                    keep_id = i.id
+                else:
+                    pass
+            try:
+                b = Book.objects.filter(serial=serial)[0]
+            except:
+                b = Movies.objects.filter(serial=serial)[0]
+            m = Memberships.objects.get(id=keep_id)
+            name = b.name
+            author = b.author
+            idate = m.if_issue_date
+            rdate = m.if_return_date
+
+            return render(request, 'management/trans.html', context={'letsretbook': [name, author, serial, idate, rdate, remarks, 'payfine']})
+
+        except Exception as error_message:
+            return render(request, 'management/trans.html', context={'error_message': error_message})
+
+
+    else:
+        return render(request, 'management/trans.html', context={'error_message': 'something went wrong'} )
+
+
+def isbookavail(request):
+    if not request.user.is_authenticated():
+        return render(request, 'management/login.html')
+
+
+    elif request.method == 'POST':
+
+        try:
+
+
+            name = request.POST['name']
+            author = request.POST['author']
+            book_index = request.POST.get('drop_downb', False)
+            #book_index = request.POST['drop_downb']
+            movie_index = request.POST.get('drop_downm', False)
+            #movie_index = request.POST['drop_downm']
+
+            if name !="":
+                temp_obj = list(Book.objects.filter(name=name))
+                temp_obj += list(Movies.objects.filter(name=name))
+                try:
+                    author = temp_obj[0].author
+                    return render(request, 'management/trans.html',context={'letsissue': [name,author]})
+
+                except:
+                    return render(request, 'management/trans.html', context={'error_message': "No movie with such name found :("})
+
+            elif author !="":
+                temp_obj = list(Book.objects.filter(name=author))
+                temp_obj += list(Movies.objects.filter(name=author))
+                try:
+                    name=temp_obj[0].name
+                    return render(request, 'management/trans.html', context={'letsissue': [name, author]})
+                except:
+                    return render(request, 'management/trans.html',
+                                  context={'error_message': "No such name of Author/movie maker found :("})
+
+            elif book_index !="":
+                temp_obj =  [i.name for i in Book.objects.all()]
+                try:
+                    name = temp_obj[book_index]
+                    author = list(Book.objects.filter(name=name))[0].author
+                    return render(request, 'management/trans.html', context={'letsissue': [name, author]})
+                except:
+                    return render(request, 'management/trans.html',
+                                  context={'error_message': "Something went wrong:("})
+
+            elif movie_index !="":
+                temp_obj = [i.name for i in Movies.objects.all()]
+                try:
+                    name = temp_obj[movie_index]
+                    author = list(Movies.objects.filter(name=name))[0].author
+                    return render(request, 'management/trans.html', context={'letsissue': [name, author]})
+                except:
+                    return render(request, 'management/trans.html',
+                                  context={'error_message': "Something went wrong:("})
+
+
+            else:
+                return render(request, 'management/trans.html', context={'error_message': "Please Choose 1 option"})
+
+        except Exception as error_message:
+            return render(request, 'management/trans.html', context={'error_message': error_message})
+
+
+    else:
+        #get
+        try:
+            bobject = [i.name for i in Book.objects.all()]
+            mobject = [i.name for i in Movies.objects.all()]
+            return render(request, 'management/trans.html', context={'isbookavail': bobject, 'isbookavail2': mobject})
+        except Exception as error_message:
+            return render(request, 'management/trans.html', context={'error_message': error_message})
+
+def letsissue(request):
+    if not request.user.is_authenticated():
+        return render(request, 'management/login.html')
+
+    #get
+    return render(request, 'management/trans.html', context={'letsissue': 'issue_happened'})

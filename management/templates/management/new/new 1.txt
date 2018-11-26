@@ -5,7 +5,7 @@
 					<ul>
 					<br><br><br>
 					<li><a href="/management/isbookavail/">Is book available?<a></li>
-					<li><a href="/management/letsissue/">Issue book?<a></li>
+					<li><a href=#>Issue book?<a></li>
 					<li><a href="/management/retbook/">Return book?<a></li>
 					<li><a href="/management/payfine/">Pay Fine?<a></li>
 					</U>
@@ -203,13 +203,13 @@
 				</tr>
 				<tr><td colspan=2> or</td>
 				</tr>
-				<tr><td><select  name="drop_downb" size="10">
+				<tr><td><select  name="drop1" size="10">
 							<option disabled selected value=""> -- Select a Book -- </option>
 						{% for i in isbookavail %}
 							<option value="{{ forloop.counter0 }}">{{i}}</option>
 						{% endfor %}
 						
-				</select></td><td><select  name="drop_downm" size="10">
+				</select></td><td><select  name="drop2" size="10">
 							<option disabled selected value=""> -- Select a movie -- </option>
 						{% for i in isbookavail2 %}
 							<option value="{{ forloop.counter0 }}">{{i}}</option>
@@ -241,12 +241,12 @@
 			
 			
 				<center>
-				<caption><h3>Issue Book/ Movie</h3></caption>	
-				<form action="/management/letsissue/" method="post" name="myForm">
-					{% csrf_token %}
-					<p><strong>Only 1 Book/ Movie can be issued at a time</strong></p>
-					<table><tr><td>EnterBook/ Movie Name.. </td><td><fieldset>{{ letsissue.0 }}</fieldset></td>
-							</tr>
+			<caption><h3>Issue Book/ Movie</h3></caption>	
+			<form action="/management/letsissue/" method="post" name="myForm">
+				{% csrf_token %}
+				<p><strong>Only 1 Book/ Movie can be issued at a time</strong></p>
+				<table><tr><td>EnterBook/ Movie Name.. </td><td><fieldset>{{ letsissue.0 }}</fieldset></td>
+						</tr>
 						<tr><td>Enter author name</td><td><fieldset>{{ letsissue.1 }}</fieldset></td>
 						</tr>
 						<tr><td><font color="RED">*</font>Membership Id.</td><td><input type="text" name="member" id="member"/></td>
@@ -265,7 +265,7 @@
 						
 			   </form>		
 			
-			{% endif %}
+			{ endif }
 			
 	
 

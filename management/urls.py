@@ -36,7 +36,10 @@ urlpatterns = [
     url(r'^addmember/$', views.addmember, name='addmember'),
     url(r'^addbook/$', views.addbook, name='addbook'),
     url(r'^addsuperuser/$', views.addsuperuser, name='addsuperuser'),
-
-
+    url(r'^payfine/$', views.payfine, name='payfine'),
+    url(r'^retbook/$', views.retbook, name='retbook'),
+    url(r'^letsretbook/$', views.letsretbook, name='letsretbook'),
+    url(r'^isbookavail/$', views.isbookavail, name='isbookavail'),
+    url(r'^letsissue/$', views.letsissue, name='letsissue'),
 
 ]
