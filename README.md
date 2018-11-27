@@ -12,8 +12,8 @@ django==1.9
 
 
 ### To run: change path to home directory(this will include 'manage.py' file) in cmd and type:
-``` python manage.py runserver
-```
+` python manage.py runserver
+`
 ### enter site with port no. 8000(default by django)
 ` http://127.0.0.1:8000/management/
 `
