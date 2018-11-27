@@ -1,0 +1,27 @@
+j{% if letsretbook %}
+				<center>
+			<caption><h3>Return Book/ Movie </h3></caption>	
+			<form action="/management/payfine/" method="post" name="myForm">
+				{% csrf_token %}
+				<p><strong>Return Book</strong></p>
+				<table><tr><td>EnterBook/ Movie Name.. </td><td><input type="text" name="name" value="{{ letsretbook.0 }}" readonly /></td>
+						</tr>
+						<tr><td>Enter author name</td><td><input type="text" name="author" value="{{ letsretbook.1 }}" readonly /></td>
+						</tr>
+						<tr><td><font color="RED">*</font>Serial No.</td><td><input type="text" name="serial" id="serial" value="{{ letsretbook.2 }}" readonly /></td>
+						</tr>
+						<tr><td><font color="RED">*</font>Membership Id.</td><td><input type="text" name="member" id="member" value="{{ letsretbook.6 }}" readonly /></td>
+						</tr>
+						<tr><td>Issue Date</td><td><input type="text" name="idate" value="{{ letsretbook.3 }}" readonly /></td>
+						</tr>
+						<tr><td>Return Date</td><td><input type="text" name="rdate" value="{{ letsretbook.4 }}" readonly /></td>
+						</tr>
+						
+						<tr><td>Remarks</td><td><input type="text" name="remarks" id="remarks" value="{{ letsretbook.5 }}" readonly /></td>
+						</tr>
+						<tr><td colspan=2><input type="submit" value="Submit" /></td></td>
+						</tr>
+				</table>
+						
+						
+			   </form>

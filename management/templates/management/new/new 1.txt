@@ -5,7 +5,7 @@
 					<ul>
 					<br><br><br>
 					<li><a href="/management/isbookavail/">Is book available?<a></li>
-					<li><a href=#>Issue book?<a></li>
+					<li><a href="/management/letsissuedirectly/">Issue book?<a></li>
 					<li><a href="/management/retbook/">Return book?<a></li>
 					<li><a href="/management/payfine/">Pay Fine?<a></li>
 					</U>
@@ -124,7 +124,7 @@
 			{% endif %}
 			{% if payfine %}
 				<br><br><br><br><br>
-				<center><h3><strong>Member Name:{{payfine.0}} will be having no dues left.<br> Kindly collect a fine of ₹{{payfine.1}} for {{payfine.2}} days delay!</strong></h3></center>
+				<center><h3><strong>Member Name:{{payfine.0}}.<br> Kindly collect a fine of ₹{{payfine.1}} for {{payfine.2}} days delay!</strong></h3></center>
 				
 								
 			   
@@ -193,37 +193,36 @@
 			
 			
 			{% if isbookavail %}
-				<center>
-			<caption><h3>Book Availability </h3></caption>	
-			<form action="/management/isbookavail/" method="post" name="myForm">
-				{% csrf_token %}
-				<p><strong>Please go with 1 out of 4 options: <br> Either enter book details or choose from the list</strong></p>
-				<table>
-				<tr><td><input type="text "placeholder="Enter Book/movie Name" name="name"/></td><td><input type="text"placeholder="Enter Author Name" name="author"/></td>
-				</tr>
-				<tr><td colspan=2> or</td>
-				</tr>
-				<tr><td><select  name="drop1" size="10">
-							<option disabled selected value=""> -- Select a Book -- </option>
-						{% for i in isbookavail %}
-							<option value="{{ forloop.counter0 }}">{{i}}</option>
-						{% endfor %}
+			<center>
+				<caption><h3>Book Availability </h3></caption>	
+				<form action="/management/isbookavail/" method="post" name="myForm">
+					{% csrf_token %}
+					<p><strong>Please go with 1 out of 4 options: <br> Either enter book details or choose from the list</strong></p>
+					<table>
+							<tr><td><input type="text "placeholder="Enter Book/movie Name" name="name"/></td>
+							<td><input type="text"placeholder="Enter Author Name" name="author"/></td>
+							</tr>
+							<tr><td colspan=2> or</td>
+							</tr>
+							<tr><td><select  name="drop_downb" size="10">
+											<option disabled selected value=""> -- Select a Book -- </option>
+														{% for i in isbookavail %}
+															<option value="{{ forloop.counter0 }}">{{i}}</option>
+														{% endfor %}
 						
-				</select></td><td><select  name="drop2" size="10">
-							<option disabled selected value=""> -- Select a movie -- </option>
-						{% for i in isbookavail2 %}
-							<option value="{{ forloop.counter0 }}">{{i}}</option>
-						{% endfor %}
+									</select></td><td>
+									<select  name="drop_downm" size="10">
+											<option disabled selected value=""> -- Select a movie -- </option>
+														{% for i in isbookavail2 %}
+															<option value="{{ forloop.counter0 }}">{{i}}</option>
+														{% endfor %}
 					
-				</select></td>
-				</tr>
-				<tr><td><button type="cancel">Cancel</button></td><td><input type="submit" value="Submit" /></td>
-						</tr>
-				
-				</table>					
-						
-			   </form>		
-			
+									</select></td>
+							</tr>
+							<tr><td><button type="cancel">Cancel</button></td><td><input type="submit" value="Submit" /></td>
+							</tr>							
+					</table>							
+			   </form>					
 			{% endif %}
 			
 			
@@ -239,21 +238,21 @@
 			
 			{% if letsissue %}
 			
-			
+				
 				<center>
-			<caption><h3>Issue Book/ Movie</h3></caption>	
-			<form action="/management/letsissue/" method="post" name="myForm">
-				{% csrf_token %}
-				<p><strong>Only 1 Book/ Movie can be issued at a time</strong></p>
-				<table><tr><td>EnterBook/ Movie Name.. </td><td><fieldset>{{ letsissue.0 }}</fieldset></td>
+				<caption><h3>Issue Book/ Movie</h3></caption>	
+				<form action="/management/letsissue/" method="post" name="myForm">
+					{% csrf_token %}
+					<p><strong>Only 1 Book/ Movie can be issued at a time</strong></p>
+					<table><tr><td>EnterBook/ Movie Name.. </td><td><input type="text" name="name"  value="{{ letsissue.0 }}"readonly/></td>
+							</tr>
+						<tr><td>Enter author name</td><td><input type="text" name="author" value="{{ letsissue.1 }}" readonly/></td>
 						</tr>
-						<tr><td>Enter author name</td><td><fieldset>{{ letsissue.1 }}</fieldset></td>
+						<tr><td><font color="RED">*</font>Membership Id.</td><td><input type="text" name="member" id="member" required /></td>
 						</tr>
-						<tr><td><font color="RED">*</font>Membership Id.</td><td><input type="text" name="member" id="member"/></td>
+						<tr><td>Issue Date</td><td><input type="date" name="idate" id="idate" required /></td>
 						</tr>
-						<tr><td>Issue Date</td><td><input type="date" name="idate" id="idate"/></td>
-						</tr>
-						<tr><td>Return Date</td><td><input type="text" name="rdate" id="rdate" value="15 days to the current date" readonly></td>
+						<tr><td>Return Date</td><td><input type="text" name="rdate" id="rdate" placeholder="15 days to the current date" readonly></td>
 						</tr>						
 						<tr><td>Remarks</td><td><input type="text" name="remarks" id="remarks"/></td>
 						</tr>
@@ -265,7 +264,46 @@
 						
 			   </form>		
 			
-			{ endif }
+			{% endif %}
+			
+			
+			{% if okissued %}
+				 <center><h3><strong>item issued to {{ okissued.1 }}<br><font color="RED"><u>Note:</u></font>Return Date:{{ okissued.0 }}</strong></h3></center>
+			
+			{% endif %}
+			
+			
+			{% if letsissuedirectly %}
+				
+				<center>
+				<caption><h3>Issue Book/ Movie</h3></caption>	
+				<form action="/management/letsissue/" method="post" name="myForm">
+					{% csrf_token %}
+					<p><strong>Only 1 Book/ Movie can be issued at a time</strong></p>
+					<table><tr><td>EnterBook/ Movie Name.. </td><td><input type="text" name="name"  required /></td>
+							</tr>
+						<tr><td>Enter author name</td><td><input type="text" name="author" required /></td>
+						</tr>
+						<tr><td><font color="RED">*</font>Membership Id.</td><td><input type="text" name="member" id="member" required /></td>
+						</tr>
+						<tr><td>Issue Date</td><td><input type="date" name="idate" id="idate" required /></td>
+						</tr>
+						<tr><td>Return Date</td><td><input type="text" name="rdate" id="rdate" placeholder="15 days to the current date" readonly></td>
+						</tr>						
+						<tr><td>Remarks</td><td><input type="text" name="remarks" id="remarks"/></td>
+						</tr>
+						
+				<tr><td><button type="cancel">Cancel</button></td><td><input type="submit" value="Submit" /></td>
+						</tr>
+				</table>
+						
+						
+			   </form>		
+			
+						
+			
+			{% endif %}
+			
 			
 	
 

@@ -1,7 +1,5 @@
 from django.db import models
 
-# Create your models here.
-
 class Book(models.Model):
     """
     Book class - to describe book in the system.
@@ -18,6 +16,9 @@ class Book(models.Model):
     def __str__(self):
         return ('Book: ' + self.name)  #object description in string
 
+    def class_name(self):
+        return self.__class__.__name__
+
 class Movies(models.Model):
     """
     Movies class - to describe movie in the system.
@@ -33,6 +34,9 @@ class Movies(models.Model):
 
     def __str__(self):
         return ('Movie: ' + self.name+ '('+self.author +')')
+
+    def class_name(self):
+        return self.__class__.__name__
 
 class Memberships(models.Model):
     """
@@ -54,5 +58,3 @@ class Memberships(models.Model):
 
     def __str__(self):
         return ('Member Name: ' + self.name )
-
-

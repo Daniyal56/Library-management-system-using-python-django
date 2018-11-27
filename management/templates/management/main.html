@@ -8,7 +8,7 @@
 						<td><a href="/management/addmember/">Add<a></td>
 					  </tr>
 					  <tr>
-						<td ><a href=#>Update<a><td>
+						<td ><a href="/management/updatemember/">Update<a><td>
 					  </tr>					  
 					  <br><br><br>
 					  <tr>
@@ -16,7 +16,7 @@
 						<td><a href="/management/addbook/">Add<a></td>
 					  </tr>
 					  <tr>
-						<td><a href=#>Update<a></td>
+						<td><a href="/management/updatebook/">Update<a></td>
 					  </tr>					  
 					  
 					  <tr>
@@ -79,7 +79,7 @@
 	{% endif %}
 	{% if adduser %}
 		<br><br><br><br><br>
-		<h3><strong>Transaction completeld successfully.!! {{adduser}} added </strong></h3>
+		<h3><strong>Transaction completed successfully.!! {{adduser}} added </strong></h3>
 	{% endif %}
 		
 	</center>
@@ -146,26 +146,8 @@
 	{% endif %}
 	{% if addbook %}
 		<br><br><br><br><br>
-		<center><h3><strong>Transaction completeld. {{addbook}} added successfully!!!</strong></h3></center>
+		<center><h3><strong>Transaction completed. {{addbook}} added successfully!!!</strong></h3></center>
 	{% endif %}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
@@ -207,8 +189,116 @@
 	{% endif %}
 	{% if addsuperuser %}
 		<br><br><br><br><br>
-		<center><h3><strong>Transaction completeld. {{addsuperuser}} added successfully as superuser. Please keep your password safe!!!</strong></h3></center>
+		<center><h3><strong>Transaction completed. {{addsuperuser}} added successfully as superuser. Please keep your password safe!!!</strong></h3></center>
 	{% endif %}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	{% if updatemember %}
+	<center><caption><h3>Update Existing Membership</h3></caption>	</center>
+	<h4><font color="RED">*</font>Please leave fields blanks which don't need to be updated</h4><br>
+	<form action="/management/updatemember/" method="post">
+		{% csrf_token %}
+		<table cellspacing="20">
+			<tr><th><font color="RED">*</font>Membership Id.</th>
+				<td><input id="member" type="text" name="member" maxlength="20" required></td>
+			</tr>
+			<tr><th>First Name:</th>
+				<td><input id="fname" type="text" name="fname" maxlength="20"></td>
+			</tr>
+			<tr><th>Last Name:</th>
+				<td><input id="lname" type="text" name="lname" maxlength="20"></td>
+			</tr>
+			<tr><th>Contact No.:</th>
+				<td><input id="contact" type="text" name="contact" maxlength="10" ></td>
+			</tr>
+			<tr><th>Address:</th>
+			<td><input id="address" type="text" name="address" maxlength="75" ></td>
+			</tr>
+			<tr><th>Aadhar No.:</th>
+			<td><input id="aadhar" type="text" name="aadhar" maxlength="12" ></td>
+			</tr>
+			<tr><th>Start Date:</th>
+			<td><input type="date" name="sdate" id="sdate" ></td>
+			</tr>
+			<tr><th>End Date:</th>
+			<td><input type="date" name="edate" id="edate"></td>
+			</tr>
+			
+			<tr><td><button type="cancel" onclick="#">Cancel</button></td>
+			<td><button type="submit" onclick="#">Submit</button></td>
+			</tr>
+	 	</table>
+	   </form>
+	   <br>
+	{% endif %}
+
+	
+	{% if memberupdated %}
+	
+	<br><br><br><br><br>
+		<center><h3><strong>Transaction completed. {{memberupdated}} updated successfully.!!!</strong></h3></center>	
+	{% endif %}
+	
+	
+	
+	{% if updatebook %}
+	<center><caption><h3>Update Existing Book/ Movie</h3></caption>	</center>
+	<h4><font color="RED">*</font>Please leave fields blanks which don't need to be updated</h4><br>
+	<form action="/management/updatebook/" method="post">
+		{% csrf_token %}
+		<table cellspacing="20">
+			<tr><th><font color="RED">*</font>Serial No.</th>
+				<td><input id="serial" type="text" name="serial" maxlength="10" required></td>
+			</tr>
+			<tr><th>Book/ Movie Name:</th>
+				<td><input id="name" type="text" name="name" maxlength="50"></td>
+			
+			<tr><th>Author:</th>
+				<td><input id="author" type="text" name="author" maxlength="50" ></td>
+			</tr>
+			<tr><th>Category:</th>
+			<td><input id="cat" type="text" name="cat" maxlength="75" ></td>
+			</tr>
+			<tr><th>Status:</th>
+			<td><input id="status" type="text" name="status" maxlength="12" ></td>
+			</tr>
+			<tr><th>Cost</th>
+			<td><input id="cost" type="text" name="cost" maxlength="12" ></td>
+			</tr><tr><th>Quantity</th>
+			<td><input id="quanity" type="text" name="quanity" maxlength="12" ></td>
+			</tr>
+			
+			<tr><td><button type="cancel" onclick="#">Cancel</button></td>
+			<td><button type="submit" onclick="#">Submit</button></td>
+			</tr>
+	 	</table>
+	   </form>
+	   <br>
+	{% endif %}
+	
+	{% if bookupdated %}
+		<br><br><br><br><br>
+		<center><h3><strong>Transaction completed. {{bookupdated}} updated successfully.!!!</strong></h3></center>
+	
+	{% endif %}
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

@@ -13,6 +13,9 @@ from django.contrib.auth import get_user_model
 
 # Create your views here.
 
+
+
+
 class QQ:
     def __xor__(self, other):
         not_self = self.clone()
@@ -258,6 +261,92 @@ def addmember(request):
         return render(request, 'management/main.html',context={'add_user':'add_user'})
 
 
+def updatemember(request):
+    if not request.user.is_authenticated():
+        return render(request, 'management/login.html')
+    elif not request.user.is_superuser:
+        return HttpResponse('Woah! only superusers Allowed!!!')
+    elif request.method == 'POST':
+        member = request.POST['member']
+        fname = request.POST['fname']
+        lname = request.POST['lname']
+        contact = request.POST['contact']
+        address = request.POST['address']
+        aadhar = request.POST['aadhar']
+        sdate = request.POST['sdate']
+        edate = request.POST['edate']
+        name=fname+" "+lname
+
+        try:
+            try:
+                obj=Memberships.objects.get(id=member)
+                if fname!="" and lname !="":
+                    obj.name=name
+                if contact !="":
+                    obj.contact=contact
+                if address!="":
+                    obj.address=address
+                if aadhar!="":
+                    obj.aadhar=aadhar
+                if sdate!="":
+                    obj.start_date =sdate
+                if edate!="":
+                    obj.end_date =edate
+                obj.save()
+                return render(request, 'management/main.html', context={'memberupdated': name})
+            except:
+                error_message="there's no Member with such member Id. "
+                return render(request, 'management/main.html', context={'error_message': error_message})
+        except Exception as error_message:
+            return render(request, 'management/main.html', context={'error_message': error_message})
+    else:
+        return render(request, 'management/main.html',context={'updatemember':'update_member'})
+
+def updatebook(request):
+    if not request.user.is_authenticated():
+        return render(request, 'management/login.html')
+    elif not request.user.is_superuser:
+        return HttpResponse('Woah! only superusers Allowed!!!')
+    elif request.method == 'POST':
+
+        serial = request.POST['serial']
+        name = request.POST['name']
+        author = request.POST['author']
+        category = request.POST['cat']
+        status = request.POST['status']
+        cost = request.POST['cost']
+        quanity = request.POST['quanity']
+
+        try:
+            try:
+
+                obj = list(Book.objects.filter(serial=serial))
+                obj += list(Movies.objects.filter(serial=serial))
+                obj = obj[0]
+
+                if name!="":
+                    obj.name=name
+                if author !="":
+                    obj.author=author
+                if category !="":
+                    obj.category=category
+                if status!="":
+                    obj.status=status
+                if cost!="":
+                    obj.cost =cost
+                if quanity!="":
+                    obj.quanity =quanity
+                obj.save()
+                return render(request, 'management/main.html', context={'bookupdated': name})
+            except:
+                error_message="there's no Book/Member with such serial No. "
+                return render(request, 'management/main.html', context={'error_message': error_message})
+        except Exception as error_message:
+            return render(request, 'management/main.html', context={'error_message': error_message})
+    else:
+        return render(request, 'management/main.html',context={'updatebook':'updatebook'})
+
+
 def addbook(request):
     if not request.user.is_authenticated():
         return render(request, 'management/login.html')
@@ -313,17 +402,6 @@ def addsuperuser(request):
             return render(request, 'management/main.html', context={'error_message': error_message})
     else:
         return render(request, 'management/main.html',context={'add_superuser':'add_superuser'})
-
-
-
-
-
-
-
-
-
-
-
 
 
 def payfine(request):
@@ -426,17 +504,30 @@ def letsretbook(request):
                     keep_id = i.id
                 else:
                     pass
+
+                try:
+                    dummy= keep_id
+                except:
+                    error_message="Nobody got issued any item as per your given serial No.! :)"
+                    return render(request, 'management/trans.html', context={'error_message': error_message})
+
+
             try:
                 b = Book.objects.filter(serial=serial)[0]
             except:
-                b = Movies.objects.filter(serial=serial)[0]
+                try:
+                    b = Movies.objects.filter(serial=serial)[0]
+                except:
+                    error_message="Hey! the item you want to return doesn't belongs to Library. <br> There's no item exists as per the given the Serial No. :)"
+                    return render(request, 'management/trans.html', context={'error_message': error_message})
+
             m = Memberships.objects.get(id=keep_id)
             name = b.name
             author = b.author
             idate = m.if_issue_date
             rdate = m.if_return_date
 
-            return render(request, 'management/trans.html', context={'letsretbook': [name, author, serial, idate, rdate, remarks, 'payfine']})
+            return render(request, 'management/trans.html', context={'letsretbook': [name, author, serial, idate, rdate, remarks, m.id]})
 
         except Exception as error_message:
             return render(request, 'management/trans.html', context={'error_message': error_message})
@@ -445,23 +536,16 @@ def letsretbook(request):
     else:
         return render(request, 'management/trans.html', context={'error_message': 'something went wrong'} )
 
-
 def isbookavail(request):
     if not request.user.is_authenticated():
         return render(request, 'management/login.html')
 
-
-    elif request.method == 'POST':
-
+    elif request.method == 'POST': #if post request
         try:
-
-
             name = request.POST['name']
             author = request.POST['author']
             book_index = request.POST.get('drop_downb', False)
-            #book_index = request.POST['drop_downb']
             movie_index = request.POST.get('drop_downm', False)
-            #movie_index = request.POST['drop_downm']
 
             if name !="":
                 temp_obj = list(Book.objects.filter(name=name))
@@ -483,39 +567,32 @@ def isbookavail(request):
                     return render(request, 'management/trans.html',
                                   context={'error_message': "No such name of Author/movie maker found :("})
 
-            elif book_index !="":
-                temp_obj =  [i.name for i in Book.objects.all()]
+            elif book_index !="" and book_index!= False:
+                temp_obj =  [i.name for i in Book.objects.filter(status="available")]
                 try:
-                    name = temp_obj[book_index]
+                    name = temp_obj[int(book_index)]
                     author = list(Book.objects.filter(name=name))[0].author
                     return render(request, 'management/trans.html', context={'letsissue': [name, author]})
                 except:
                     return render(request, 'management/trans.html',
                                   context={'error_message': "Something went wrong:("})
 
-            elif movie_index !="":
-                temp_obj = [i.name for i in Movies.objects.all()]
-                try:
-                    name = temp_obj[movie_index]
-                    author = list(Movies.objects.filter(name=name))[0].author
-                    return render(request, 'management/trans.html', context={'letsissue': [name, author]})
-                except:
-                    return render(request, 'management/trans.html',
-                                  context={'error_message': "Something went wrong:("})
+            elif movie_index !="" and movie_index!=False:
+                temp_obj = [i.name for i in Movies.objects.filter(status="available")]
 
+                name = temp_obj[int(movie_index)]
+                author = list(Movies.objects.filter(name=name))[0].author
+                return render(request, 'management/trans.html', context={'letsissue': [name, author]})
 
             else:
                 return render(request, 'management/trans.html', context={'error_message': "Please Choose 1 option"})
 
         except Exception as error_message:
             return render(request, 'management/trans.html', context={'error_message': error_message})
-
-
-    else:
-        #get
+    else:  #get
         try:
-            bobject = [i.name for i in Book.objects.all()]
-            mobject = [i.name for i in Movies.objects.all()]
+            bobject = [i.name for i in Book.objects.filter(status="available")]
+            mobject = [i.name for i in Movies.objects.filter(status="available")]
             return render(request, 'management/trans.html', context={'isbookavail': bobject, 'isbookavail2': mobject})
         except Exception as error_message:
             return render(request, 'management/trans.html', context={'error_message': error_message})
@@ -523,6 +600,48 @@ def isbookavail(request):
 def letsissue(request):
     if not request.user.is_authenticated():
         return render(request, 'management/login.html')
+    elif request.method == 'POST': #if post request
+        try:
+            name =  request.POST.get('name', False)
+            author =  request.POST.get('author', False)
+            member = request.POST['member']
+            idate = request.POST['idate']
+            remarks = request.POST['remarks']
+
+            temp_obj = list(Book.objects.filter(name=name,author=author))
+            temp_obj += list(Movies.objects.filter(name=name,author=author))
+            #changed columns in Book/Movie
+            #p_date = date of issue + 15 days
+            ry, rm, rd = idate.split("-")
+            p_date = datetime.date(int(ry), int(rm), int(rd))+ datetime.timedelta(days=15)
+
+            aobj = temp_obj[0]
+            aobj.status="not available"
+            aobj.procurement = p_date
+            aobj.save()
+
+            # changed columns in Membership
+
+            memobj = Memberships.objects.get(id=member)
+            memobj.status="active"
+
+
+            if aobj.__class__.__name__ == 'Movies':
+                memobj.if_having_movie = aobj.serial
+            else:
+                memobj.if_having_book = aobj.serial
+
+            memobj.if_issue_date = idate
+            memobj.if_return_date = p_date
+            memobj.save()
+
+
+            return render(request, 'management/trans.html', context={'okissued': [p_date,memobj.name]})
+
+
+        except Exception as error_message:
+            return render(request, 'management/trans.html', context={'error_message': error_message})
+
 
     #get
-    return render(request, 'management/trans.html', context={'letsissue': 'issue_happened'})
+    return render(request, 'management/trans.html', context={'letsissuedirectly': 'issue_happened'})
